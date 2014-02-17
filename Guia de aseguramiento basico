@@ -41,3 +41,12 @@ cd debian-bastion
 
 * Siga las instrucciones:
 - defina nombre de host y nombre de dominio
+
+
+Notas adicionales
+-----------------
+
+--hostname : permite definir el nuevo nombre de host que tomará el equipo
+--domain : permite indicar el dominio al que pertenece
+--debug : muestra mensajes informativos en pantalla
+

@@ -1,0 +1,38 @@
+#!/bin/bash
+# 10-configure-host
+#
+# configure host.conf, hosts.allow and hosts.deny options
+#
+
+#
+# configure host
+#
+
+info " Configuring Host and Domain Name "
+
+cat <<HOSTCONF_EOF >/etc/host.conf
+multi on
+order hosts,bind
+nospoof on
+HOSTCONF_EOF
+
+cat <<HOSTALLOW >/etc/hosts.allow
+ALL: $GATEWAY
+HOSTALLOW
+
+## eliminamos toda referencia erronea del /etc/hosts
+$SED -i "/^$LAN_IPADDR*/d" /etc/hosts
+$SED -i "/$NAME/d" /etc/hosts
+# stripe all comments
+sed -i -e '/ *#/d; /^ *$/d' /etc/hosts
+
+# modificar /etc/hosts para incorporar resolucion de nombre de equipo
+echo " " >> /etc/hosts
+echo "# Host IP Address" >> /etc/hosts
+echo "$LAN_IPADDR $SERVERNAME $NAME" >> /etc/hosts
+
+# configure hostname
+echo $NAME > /etc/hostname
+
+# configure mailname
+echo $SERVERNAME > /etc/mailname
