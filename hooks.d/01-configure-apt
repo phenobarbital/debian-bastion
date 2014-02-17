@@ -18,9 +18,9 @@ rm -f /etc/apt/sources.list.d/*.list
 
 # generate new repositories
 if [ "$REPO_TYPE" == "local" ]; then
-mirror="file://$REPO_URL/debian/"
+mirror="file://$REPO_URL/"
 else
-mirror="http://$REPO_URL/debian/"
+mirror="http://$REPO_URL/"
 fi
 
 # oficial repositories
