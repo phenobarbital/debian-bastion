@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash
 # ================================================================================
 # Bastion Debian Linux: Secure a Server-Based Debian GNU/Linux
 #

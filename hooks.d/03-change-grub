@@ -3,6 +3,7 @@
 
 info "Update GRUB options"
 
+if [ -f "/etc/default/grub" ]; then
 options=`cat /etc/default/grub | grep madvise`
 
 # aplicar cambios al grub solo si no estan aplicados
@@ -14,3 +15,4 @@ debug "Update grub configuration"
 
 # update grub
 /usr/sbin/update-grub
+fi
