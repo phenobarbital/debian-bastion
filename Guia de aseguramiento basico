@@ -19,6 +19,7 @@ Entre las acciones de seguridad que asume el script están:
 * Configuración efectiva de APT
 * Aseguramiento y optimización de algunos factores del sistema operativo
 * Habilitación de SELinux (proximamente: tomoyo)
+* Instala un firewall basado en Shorewall (básico)
 
 Uso
 ---
@@ -59,3 +60,5 @@ Notas importantes:
 
 * Luego de ejecutado el script, se perderá acceso a root al equipo, verifique muy bien la clave del usuario local (uidNumber: 1000) y del usuario $SOPORTE
 * Verifique plenamente el acceso garantizado a un repositorio Debian, detener el script dejará al sistema en un estado inseguro e inconsistente
+* Si el equipo posee mas de una interfaz de red, verifique su configuración en /etc/network/interfaces y las reglas de firewall en /etc/shorewall/interfaces o podría perder acceso al equipo.
+

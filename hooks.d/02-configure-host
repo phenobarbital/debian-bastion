@@ -21,8 +21,8 @@ ALL: $GATEWAY
 HOSTALLOW
 
 ## eliminamos toda referencia erronea del /etc/hosts
-$SED -i "/^$LAN_IPADDR*/d" /etc/hosts
-$SED -i "/$NAME/d" /etc/hosts
+sed -i "/^$LAN_IPADDR*/d" /etc/hosts
+sed -i "/$NAME/d" /etc/hosts
 # stripe all comments
 sed -i -e '/ *#/d; /^ *$/d' /etc/hosts
 
