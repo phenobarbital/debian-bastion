@@ -7,7 +7,7 @@
 
 info " Install basic software and utilities "
 
-$APT -y install sudo locate iptraf iftop htop rsync bash-completion wget tcpdump ntpdate finger links lynx ethtool less screen tree curl wget telnet iputils-ping dnsutils ldap-utils lsof
+$APT -y install sudo rsync bash-completion wget tcpdump ntpdate finger links lynx ethtool less screen tree curl wget telnet iputils-ping dnsutils ldap-utils lsof
 
 # disable exim4
 aptitude -y purge exim4 exim4-daemon-light

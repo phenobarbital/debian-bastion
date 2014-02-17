@@ -62,3 +62,18 @@ Notas importantes:
 * Verifique plenamente el acceso garantizado a un repositorio Debian, detener el script dejará al sistema en un estado inseguro e inconsistente
 * Si el equipo posee mas de una interfaz de red, verifique su configuración en /etc/network/interfaces y las reglas de firewall en /etc/shorewall/interfaces o podría perder acceso al equipo.
 
+Herramientas de seguridad:
+* Aide solicitará la generación de una nueva base de datos de integridad, favor responder Y (toma un par de minutos, dependiendo del sistema):
+
+Generate first AIDE database, this will need several minutes, please wait
+Overwrite existing /var/lib/aide/aide.db.new [Yn]? Y
+Running aide --init...
+
+* Tripwire solicitará un passphrase:
+
+Please enter your local passphrase:
+
+Simplemente presione ENTER, posteriormente deberá colocar la contraseña de desbloqueo de acceso a la base de datos de integridad, almacenar luego en lugar seguro.
+
+* Portsentry deberá ser "tuneado" antes de ponerlo en producción
+* La vigilancia de puertos del fail2ban deberá realizarse de acuerdo al servicio que presta el equipo

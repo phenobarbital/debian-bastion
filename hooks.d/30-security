@@ -65,6 +65,11 @@ install_package etckeeper
 sed -i "s/^#AVOID_SPECIAL_FILE_WARNING.*$/AVOID_SPECIAL_FILE_WARNING=1/" /etc/etckeeper/etckeeper.conf
 sed -i "s/^#AVOID_DAILY_AUTOCOMMITS.*$/AVOID_DAILY_AUTOCOMMITS=1/" /etc/etckeeper/etckeeper.conf
 
+# install locate
+install_package locate
+
+warning "update locate database, please wait ..."
+updatedb
 
 #### security tools
 
@@ -108,7 +113,7 @@ install_package clamav clamav-daemon clamav-freshclam
 
 ## install portsentry
 install_package portsentry
-/etc/portsentry/portsentry.conf
+# /etc/portsentry/portsentry.conf
 
 # TODO: configure portsentry with fail2ban
 

@@ -239,6 +239,7 @@ read -p "Continue with installation (y/n)?" WORK
     else
 		warning "Reinicio necesario!"
 		info "= Todo terminado, por favor reinicie el sistema para aplicar los cambios ="
+		info "Recuerde asignar clave al usuario $SUPPORT antes de reiniciar el sistema"
 	fi
 }
 	
