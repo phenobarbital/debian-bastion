@@ -1,0 +1,21 @@
+#!/bin/bash
+# 50-configure-locales
+#
+# install and configure locales
+#
+
+info " Configuring Linux locales "
+
+#
+#  Install locales
+#
+install_package locales
+install_package util-linux-locales
+
+#
+# define locales
+#
+/usr/sbin/update-locale LANG=C
+
+# regenerate locales
+/usr/sbin/locale-gen

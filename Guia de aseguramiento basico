@@ -63,7 +63,7 @@ Notas importantes:
 * Si el equipo posee mas de una interfaz de red, verifique su configuración en /etc/network/interfaces y las reglas de firewall en /etc/shorewall/interfaces o podría perder acceso al equipo.
 
 Herramientas de seguridad:
-* Aide solicitará la generación de una nueva base de datos de integridad, favor responder Y (toma un par de minutos, dependiendo del sistema):
+* Aide solicitará la generación de una nueva base de datos de integridad, favor responder N (esto toma un par de minutos, dependiendo del sistema, podrá generarla después):
 
 Generate first AIDE database, this will need several minutes, please wait
 Overwrite existing /var/lib/aide/aide.db.new [Yn]? Y
@@ -77,3 +77,4 @@ Simplemente presione ENTER, posteriormente deberá colocar la contraseña de des
 
 * Portsentry deberá ser "tuneado" antes de ponerlo en producción
 * La vigilancia de puertos del fail2ban deberá realizarse de acuerdo al servicio que presta el equipo
+* El archivo /etc/security/access.conf permite abrir (o cerrar) accesos AUTENTICADOS de acuerdo al origen, PAM podría bloquear accesos que no estuvieran especificados acá, referirse a la ayuda de pam_access.
