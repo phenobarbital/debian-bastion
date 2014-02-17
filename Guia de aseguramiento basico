@@ -6,6 +6,7 @@ Requerimientos
 --------------
 
 * lsb-release
+* git-core
 * Conexión a internet
 
 
@@ -18,3 +19,25 @@ Entre las acciones de seguridad que asume el script están:
 * Configuración efectiva de APT
 * Aseguramiento y optimización de algunos factores del sistema operativo
 * Habilitación de SELinux (proximamente: tomoyo)
+
+Uso
+---
+
+* Instalar en el equipo objetivo lsb-release y git-core
+
+apt-get install lsb-release git-core
+
+* Dirigirse a /srv (o a /opt)
+
+cd /srv
+
+* Descargar el script desde github
+
+git clone
+
+* Ejecutar:
+cd debian-bastion
+./bastionado.sh --debug
+
+* Siga las instrucciones:
+- defina nombre de host y nombre de dominio
