@@ -1,0 +1,20 @@
+== Aseguramiento Básico ==
+
+El script actual ejecuta una serie de pasos para el aseguramiento y levantamiento de restricciones importantes para la protección de sistemas Debian GNU/Linux en Servidores.
+
+Requerimientos
+--------------
+
+* lsb-release
+* Conexión a internet
+
+
+Acciones
+--------
+
+Entre las acciones de seguridad que asume el script están:
+
+* Instalación de un conjunto de herramientas de seguridad 
+* Configuración efectiva de APT
+* Aseguramiento y optimización de algunos factores del sistema operativo
+* Habilitación de SELinux (proximamente: tomoyo)
