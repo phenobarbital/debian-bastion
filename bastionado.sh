@@ -33,6 +33,15 @@ if [ "$(id -u)" != "0" ]; then
    exit 1
 fi
 
+# commands
+CAT="$(which cat)"
+MOUNT="$(which mount)"
+ECHO="$(which echo)"
+SYSCTL="$(which sysctl)"
+APT="$(which apt-get)"
+APTITUDE="$(which aptitude)"
+#
+
 check_name()
 {
 	if [[ "${#1}" -gt 20 ]] || [[ "${#1}" -lt 2 ]]; then

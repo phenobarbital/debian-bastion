@@ -1,0 +1,90 @@
+#!/bin/bash
+# 05-enable-modules
+#
+#  This script ensures that required kernel modules will be started
+#
+
+info "Enable specific Kernel Modules and drivers"
+
+install_package linux-headers-$(uname -r)
+
+# CPU
+cpumodel=$(lscpu | grep Vendor | head -n1 | cut -d ':' -f2 | tr -d ' ')
+case "$cpumodel" in
+    "GenuineIntel")
+        install_package intel-microcode;;
+    "AuthenticAMD")
+        install_package amd64-microcode;;
+    *)
+    error "unknown CPU model $cpumodel"
+    exit 1;;
+esac
+
+# add all required modules
+modules=$(grep "ip_tables" /etc/modules)
+if [ -z "$modules" ]; then
+cat <<EOF >> /etc/modules
+ip_tables
+ip_conntrack
+iptable_filter
+iptable_nat
+ipt_physdev
+EOF
+fi
+
+# blacklist pc speaker
+echo "blacklist pcspkr" > /etc/modprobe.d/blacklist-pcspkr.conf
+
+
+# install firmware free and non-free
+install_package firmware-linux-free firmware-linux-nonfree
+
+# list all drivers in system
+# TODO build especific options for various hardware
+for device in $(lspci | awk '{ print $1 }'); do
+    module=$(lspci -v -s $device | grep Kernel | cut -d ':' -f2 | tr -d ' ')
+    if [ ! -z "$module" ]; then
+        # TODO: call for especific options for every kernel module
+        firmware=$(modinfo $module | grep firmware)
+        if [ -n "$firmware" ]; then
+            # TODO: determine firmware for every module
+            case "$module" in
+            "r8169")
+                install_package firmware-realtek;;
+            "ath9k")
+                install_package firmware-atheros;;
+            "iwlwifi")
+                install_package firmware-iwlwifi;;
+            "bnx2")
+                install_package firmware-bnx2;;
+            "bnx2x")
+                install_package firmware-bnx2x;;
+            *)
+                install_package firmware-linux-nonfree;;
+            esac
+        fi
+    fi
+done
+
+# AMD and Intel especific options
+#TODO
+
+# configure limits
+cat <<EOF > /etc/security/limits.d/stack.conf
+# nofile
+root               soft    nofile            131072
+root               hard    nofile            131072
+*               soft    nofile            131072
+*               hard    nofile            131072
+# stack
+root            soft    stack            16384
+root            hard    stack            16384
+*               soft    stack            16384
+*               hard    stack            16384
+EOF
+
+# disable core dumps
+if [ -z "`grep 'ulimit -S' /etc/profile`" ]; then
+	echo 'ulimit -S -c 0 > /dev/null 2>&1' >> /etc/profile
+	echo "*	hard 		core 		0" >> /etc/security/limits.conf
+fi

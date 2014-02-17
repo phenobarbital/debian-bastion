@@ -25,7 +25,7 @@ Uso
 
 * Instalar en el equipo objetivo lsb-release y git-core
 
-apt-get install lsb-release git-core
+apt-get install lsb-release git-core libpcre3
 
 * Dirigirse a /srv (o a /opt)
 
@@ -43,10 +43,19 @@ cd debian-bastion
 - defina nombre de host y nombre de dominio
 
 
-Notas adicionales
+Parametros adicionales
 -----------------
 
 --hostname : permite definir el nuevo nombre de host que tomará el equipo
 --domain : permite indicar el dominio al que pertenece
 --debug : muestra mensajes informativos en pantalla
 
+Ejemplo:
+
+./bastionado.sh --debug --hostaname=web --domain=devel.local
+
+Notas importantes:
+==================
+
+* Luego de ejecutado el script, se perderá acceso a root al equipo, verifique muy bien la clave del usuario local (uidNumber: 1000) y del usuario $SOPORTE
+* Verifique plenamente el acceso garantizado a un repositorio Debian, detener el script dejará al sistema en un estado inseguro e inconsistente

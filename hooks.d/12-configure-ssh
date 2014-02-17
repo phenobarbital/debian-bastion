@@ -1,0 +1,75 @@
+#!/bin/bash
+# 12-configure-ssh
+#
+# install and configure SSH
+#
+
+info " Configure SSH "
+
+$APT -y install ssh openssh-server sudo ssh-askpass sshpass
+
+#
+# Generate the Host RSA Key
+#
+if [ ! -f /etc/ssh/ssh_host_rsa_key ]; then
+	if ssh-keygen -t rsa -N "" -f /etc/ssh/ssh_host_rsa_key -C "root@$NAME"; then
+		message "successfully generated Host RSA"
+	else
+		message "failed to generate Host RSA Key"
+	fi
+fi
+
+#
+# Generate the Host DSA Key
+#
+if [ ! -f /etc/ssh/ssh_host_dsa_key ]; then
+	if ssh-keygen -t dsa -N "" -f /etc/ssh/ssh_host_dsa_key -C "root@$NAME"; then
+		message "successfully generetaged Host DSA"
+	else
+		message "failed to generate Host DSA Key"
+	fi
+fi
+
+if [ -z "`grep 'PermitRootLogin no' /etc/ssh/sshd_config`" ]; then
+
+  # change SSH port
+  sed -i "s/Port.*$/Port ${SSH_PORT}/" /etc/ssh/sshd_config
+  warning "SSH port configured to ${SSH_PORT}"
+
+  # habilitar acceso root
+  sed -i "s/PermitRootLogin.*/PermitRootLogin no/" /etc/ssh/sshd_config
+
+# Habilitar el acceso del grupo sudo
+cat <<EOF >>/etc/ssh/sshd_config
+AllowGroups sudo
+EOF
+
+  # fix permissions
+  chmod 440 /etc/sudoers
+
+  # add user to sudo group
+  /usr/sbin/adduser $ACCOUNT sudo
+
+# Configurar el banner SSH
+cat <<EOF >>/etc/ssh/sshd_banner
+************************************************
+
+Welcome to a $DIST GNU/Linux $SUITE
+Debian Bastion GNU/Linux ver. $VERSION
+
+*************************************************
+EOF
+
+  # cambiar el banner
+  sed -i -e "s/^#Banner \/etc\/issue.net/Banner \/etc\/ssh\/sshd_banner/" /etc/ssh/sshd_config
+fi
+
+# restart SSH
+service ssh restart
+
+# secure ssh
+# install molly-guard
+# secure poweroff and reboot with scripts
+install_package molly-guard
+
+# TODO: monkeysphere openPGP SSH auth
