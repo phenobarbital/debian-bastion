@@ -78,3 +78,6 @@ Simplemente presione ENTER, posteriormente deberá colocar la contraseña de des
 * Portsentry deberá ser "tuneado" antes de ponerlo en producción
 * La vigilancia de puertos del fail2ban deberá realizarse de acuerdo al servicio que presta el equipo
 * El archivo /etc/security/access.conf permite abrir (o cerrar) accesos AUTENTICADOS de acuerdo al origen, PAM podría bloquear accesos que no estuvieran especificados acá, referirse a la ayuda de pam_access.
+* La configuración de SELINUX es básica, deberá cargar los contextos adecuados LUEGO del reinicio del sistema
+
+* firewall-snort (fwsnort) requiere una cantidad de tiempo para cargar las reglas, favor sea paciente
