@@ -207,16 +207,16 @@ install_package()
 ### network functions
 
 ifdev() {
-IF=(`cat /proc/net/dev | grep ":" | cut -d ':' -f1 | grep -v 'lo' | tr '\n' ' '`)
+IF=(`cat /proc/net/dev | grep ":" | cut -d ':' -f1 | grep -v 'lo'`)
 }
 
 firstdev() {
 	if [ -z "$LAN_INTERFACE" ]; then
-		interfaces=( $IF )
+		interfaces=( `cat /proc/net/dev | grep ":" | cut -d ':' -f1 | grep -v 'lo'` )
 		# discover up interfaces
 		for interface in "${interfaces[@]}"
 		do
-			if [ -z "$(ip addr show $interface | grep 'UP')" ]; then
+			if [ -n "$(ip addr show $interface | grep 'UP')" ]; then
 				LAN_INTERFACE="$interface"
 			fi
 		done
