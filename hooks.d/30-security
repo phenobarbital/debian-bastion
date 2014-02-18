@@ -73,25 +73,6 @@ updatedb
 
 #### security tools
 
-# install psad
-install_package psad
-
-sed -i "s/^EMAIL_ADDRESSES.*$/EMAIL_ADDRESSES             $MAIL;/" /etc/psad/psad.conf
-sed -i "s/^HOSTNAME.*$/HOSTNAME             $NAME;/" /etc/psad/psad.conf
-sed -i 's/^ENABLE_IPV6_DETECTION.*$/ENABLE_IPV6_DETECTION             NO;/' /etc/psad/psad.conf
-sed -i 's/^FW_MSG_SEARCH.*$/FW_MSG_SEARCH               DROP;\nFW_MSG_SEARCH               Shorewall:net2all:DROP:;\nFW_MSG_SEARCH Shorewall:net2fw:DROP:;/' /etc/psad/psad.conf
-
-service psad restart
-
-# actualizar semanalmente las reglas del psad
-cat <<EOF > /etc/cron.weekly/psad.sh
-#!/bin/bash
-# update psad
-psad --sig-update
-# reload psad
-psad -H
-EOF
-chmod +x /etc/cron.weekly/psad.sh
 
 # install fail2ban
 install_package fail2ban
@@ -149,6 +130,29 @@ chmod +x /etc/cron.weekly/rkhunter.sh
 info " Installing ClamAV Antivirus "
 # install antivirus
 install_package clamav clamav-daemon clamav-freshclam
+
+
+##### port scanners
+
+# install psad
+install_package psad
+
+sed -i "s/^EMAIL_ADDRESSES.*$/EMAIL_ADDRESSES             $MAIL;/" /etc/psad/psad.conf
+sed -i "s/^HOSTNAME.*$/HOSTNAME             $NAME;/" /etc/psad/psad.conf
+sed -i 's/^ENABLE_IPV6_DETECTION.*$/ENABLE_IPV6_DETECTION             NO;/' /etc/psad/psad.conf
+sed -i 's/^FW_MSG_SEARCH.*$/FW_MSG_SEARCH               DROP;\nFW_MSG_SEARCH               Shorewall:net2all:DROP:;\nFW_MSG_SEARCH Shorewall:net2fw:DROP:;/' /etc/psad/psad.conf
+
+service psad restart
+
+# actualizar semanalmente las reglas del psad
+cat <<EOF > /etc/cron.weekly/psad.sh
+#!/bin/bash
+# update psad
+psad --sig-update
+# reload psad
+psad -H
+EOF
+chmod +x /etc/cron.weekly/psad.sh
 
 ## install portsentry
 install_package portsentry

@@ -48,10 +48,15 @@ sed -i 's/^#FSCKFIX=no/FSCKFIX=yes/' /etc/default/rcS
 warning "SELinux is enabled, please restart system"
 fi
 
+# postfix
+postfix-nochroot
+
 # generate basic policies
 audit2allow -a -M mypolicies
+
 # enable this policies
 semodule -i mypolicies.pp
+
 # enable user
 semanage login -a -s staff_u $SUPPORT
 semanage user -a -R 'staff_r sysadm_r' $SUPPORT

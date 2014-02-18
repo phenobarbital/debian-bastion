@@ -7,7 +7,8 @@ Requerimientos
 
 * lsb-release
 * git-core
-* Conexión a internet
+* libpcre3
+* Conexión a internet (o acceso a un repositorio Debian)
 
 
 Acciones

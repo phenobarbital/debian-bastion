@@ -18,11 +18,6 @@ EOF
 	fi
 fi
 
-CHANGES=$(egrep "vm.vfs_cache_pressure" /etc/sysctl.conf | tail)
-if [ -z "$CHANGES" ]; then
-
-info "Apply sysctl changes"
-
 # apply patches to sysctl
 cat <<EOF >> /etc/sysctl.conf
 # sysctl config
@@ -128,6 +123,7 @@ kernel.threads-max = 126015
 kernel.core_uses_pid = 1
 kernel.sysrq = 0
 kernel.kptr_restrict = 1
+kernel.suid_dumpable = 0
 
 # security
 # ipv4 security
@@ -159,4 +155,3 @@ net.ipv6.conf.default.accept_redirects = 0
 net.ipv4.ip_local_port_range = 15000 65000
 
 EOF
-fi

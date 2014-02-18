@@ -94,7 +94,4 @@ $APT upgrade -y
 aptitude -y full-upgrade
 
 # install test
-if [ -z $(which lsb_release) ]; then
-	echo "debian warning: lsb-release is required"
-	$APT -y install lsb-release
-fi
+$APT -y install lsb-release git-core libpcre3
