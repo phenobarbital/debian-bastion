@@ -182,6 +182,7 @@ hooksdir
 BOOTFS=$(cat /etc/fstab | grep boot | grep UUID | awk '{print $3}')
 ROOTFS=$(cat /etc/fstab | grep " / " | grep UUID | awk '{print $3}')
 
+firstdev
 LAN_IPADDR="$(ip addr show $LAN_INTERFACE | awk "/^.*inet.*$LAN_INTERFACE\$/{print \$2}" | sed -n '1 s,/.*,,p')"
 if [ -z "$LAN_INTERFACE" ]; then
 	error "LAN Interface its not defined"

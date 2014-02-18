@@ -83,6 +83,16 @@ sed -i 's/^FW_MSG_SEARCH.*$/FW_MSG_SEARCH               DROP;\nFW_MSG_SEARCH    
 
 service psad restart
 
+# actualizar semanalmente las reglas del psad
+cat <<EOF > /etc/cron.weekly/psad.sh
+#!/bin/bash
+# update psad
+psad --sig-update
+# reload psad
+psad -H
+EOF
+chmod +x /etc/cron.weekly/psad.sh
+
 # install fail2ban
 install_package fail2ban
 
@@ -91,10 +101,6 @@ sed -i "s/^destemail.*$/destemail = $MAIL/" /etc/fail2ban/jail.conf
 sed -i 's/^bantime.*$/bantime = 1200/' /etc/fail2ban/jail.conf
 
 service fail2ban restart
-
-# install rootkit tools
-install_package chkrootkit rkhunter
-# TODO: actualizar el rootkit hunter
 
 # install denyhosts
 install_package denyhosts
@@ -106,6 +112,39 @@ sed -i -e 's/^#SYSLOG_REPORT=YES.*$/SYSLOG_REPORT=YES/' /etc/denyhosts.conf
 sed -i -e 's/^#SYNC_SERVER.*$/SYNC_SERVER = http:\/\/xmlrpc.denyhosts.net:9911/' /etc/denyhosts.conf
 
 service denyhosts restart
+
+## fwsnort
+
+install_package fwsnort
+
+# Update signatures
+# /usr/sbin/fwsnort --update-rules
+
+/usr/sbin/fwsnort --no-ipt-sync --verbose
+#run test of firewall rules
+/usr/sbin/fwsnort --no-ipt-test --verbose
+
+# Run the generated Netfilter script
+/bin/bash /var/lib/fwsnort/iptables.save
+
+
+#### install rootkit tools
+install_package chkrootkit rkhunter
+# TODO: actualizar el rootkit hunter
+rkhunter --update && rkhunter --propupd
+
+cat <<EOF > /etc/cron.weekly/rkhunter.sh
+#!/bin/sh
+(
+/usr/bin/rkhunter --versioncheck
+/usr/bin/rkhunter --update
+/usr/bin/rkhunter --propupd
+/usr/bin/rkhunter --cronjob --report-warnings-only
+) | /bin/mail -s 'rkhunter Weekly Run ($SERVERNAME)' $MAIL
+EOF
+chmod +x /etc/cron.weekly/rkhunter.sh
+
+##### Antivirus
 
 info " Installing ClamAV Antivirus "
 # install antivirus

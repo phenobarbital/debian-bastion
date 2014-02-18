@@ -29,6 +29,7 @@ ip_conntrack
 iptable_filter
 iptable_nat
 ipt_physdev
+act_police
 EOF
 fi
 

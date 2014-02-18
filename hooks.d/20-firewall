@@ -19,6 +19,8 @@ sed -i "s/^DISABLE_IPV6=.*$/DISABLE_IPV6=Yes/" /etc/shorewall/shorewall.conf
 fi
 # optimize shorewall rules
 sed -i "s/^OPTIMIZE=.*$/OPTIMIZE=8/" /etc/shorewall/shorewall.conf
+sed -i "s/^CLAMPMSS=.*$/CLAMPMSS=Yes/" /etc/shorewall/shorewall.conf
+
 
 # - integrate with fail2ban
 sed -i "s/^BLACKLISTNEWONLY=.*$/BLACKLISTNEWONLY=No/" /etc/shorewall/shorewall.conf
@@ -76,9 +78,50 @@ ACCEPT    lan     fw    udp     123
 ACCEPT      all     fw     tcp        $sshport    -    -   2/min:3
 
 # Accept PING
-Ping(ACCEPT)     net     all
+Ping(ACCEPT)     lan     all
 
 # open ports (multiport)
 ACCEPT        all        fw       tcp      $TCP_PORTS
 ACCEPT        all        fw       udp      $UDP_PORTS
+
+# disable DDoS on DNS
+DNSDDOS        net        dmz        udp        53
 EOF
+
+### anti-DDoS for UDP 53 (DNS)
+ 
+cat > /etc/shorewall/actions << EOF
+#
+# Shorewall version 4.2 - Actions File
+#
+# /etc/shorewall/actions
+#
+###############################################################################
+#ACTION
+DNSDDOS		    # DDOS DNS attacks
+#LAST LINE - ADD YOUR ENTRIES ABOVE THIS ONE - DO NOT REMOVE
+EOF
+
+
+echo "# Intentionally Left Empty" > /etc/shorewall/actions.DNSDDOS
+
+
+cat > /etc/shorewall/DNSDDOS << EOF
+#
+# /etc/shorewall/DNSDDOS
+#
+
+use Shorewall::Chains;
+
+add_rule $chainref, q(-m string --algo bm --from 29 --to 31 --hex-string "|010000010000000000000000020001|" -j DROP);
+add_rule $chainref, q(-m string --algo bm --from 29 --to 31 --hex-string "|000000010000000000000000020001|" -j DROP);
+add_rule $chainref, q(-j ACCEPT);
+EOF
+
+
+### DDOS-Deflate Configuration
+
+
+### install logger for shorewall
+install_package fwlogwatch
+## TODO: configurarlo para shorewall
