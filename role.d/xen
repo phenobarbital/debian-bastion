@@ -33,7 +33,7 @@ aptitude purge qemu-kvm
 # update grub for booting into Xen
 dpkg-divert --divert /etc/grub.d/08_linux_xen --rename /etc/grub.d/20_linux_xen
 
-sed -e "/^GRUB_CMDLINE_LINUX=.*/ s/$/\nGRUB_CMDLINE_XEN=\"dom0_mem=$default_ramM\"\n/" /etc/default/grub
+sed -i -e "/^GRUB_CMDLINE_LINUX=.*/ s/$/\nGRUB_CMDLINE_XEN=\"dom0_mem=$default_ramM\"\n/" /etc/default/grub
 
 update-grub
 

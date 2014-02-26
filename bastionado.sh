@@ -242,16 +242,6 @@ read -p "Continue with installation (y/n)?" WORK
 	if [ "$WORK" != "y" ]; then
 		exit 0
 	fi
-	
-	# executing a role
-	if [ ! -z "$ROLENAME" ]; then
-		get_role
-		. $ROLE
-		# run
-		if [ "$?" -ne "0" ]; then
-			error "failed to execute role $ROLENAME"
-		fi
-	fi
 		
 	# installing a package list
 	if [ ! -z "$PACKAGES" ]; then
@@ -274,11 +264,21 @@ read -p "Continue with installation (y/n)?" WORK
 	if [ "$?" -ne "0" ]; then
     	error "Error en la ejecucion del script, revise log para informacion"
     	exit 1
-    else
-		warning "Reinicio necesario!"
-		info "= Todo terminado, por favor reinicie el sistema para aplicar los cambios ="
-		info "Recuerde asignar clave al usuario $SUPPORT antes de reiniciar el sistema"
 	fi
+	
+	# executing a role
+	if [ ! -z "$ROLENAME" ]; then
+		get_role
+		. $ROLE
+		# run
+		if [ "$?" -ne "0" ]; then
+			error "failed to execute role $ROLENAME"
+		fi
+	fi
+
+	warning "Reinicio necesario!"
+	info "= Todo terminado, por favor reinicie el sistema para aplicar los cambios ="
+	info "Recuerde asignar clave al usuario $SUPPORT antes de reiniciar el sistema"	
 }
 	
 # = end = #
