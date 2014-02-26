@@ -60,6 +60,28 @@ check_domain()
 	fi
 }
 
+get_role() 
+{
+	if [ -z "$ROLENAME" ]; then
+	    error "$(basename $0) role definition is missing, aborted"
+		exit 1
+	fi
+	roledir
+	if [ -f "$ROLEDIR/$ROLENAME" ]; then
+			#verifico esta permisologia
+			if [ ! -x "$ROLEDIR/$ROLENAME" ]; then
+				error "error: role '$ROLEDIR/$ROLENAME' is not executable, try chmod o+x $ROLEDIR/$ROLENAME"
+				return 1
+			else
+				debug "- using $ROLENAME as role"
+				ROLE="$ROLEDIR/$ROLENAME"
+			fi
+	else
+		error "$(basename $0) role $ROLENAME not exist, aborted"
+		exit 1
+	fi	
+}
+
 SIZE=''
 IP=''
 IFACE=''
@@ -69,7 +91,7 @@ DEBUG='false'
 VERBOSE='true'
 
 usage() {
-	echo "Usage: $(basename $0) [-n|--hostname=<hostname>] [-D|--domain=DOMAIN] [--debug] [-h|--help]"
+	echo "Usage: $(basename $0) [-n|--hostname=<hostname>] [-D|--domain=DOMAIN] [-r|--role=<role-name>] [--debug] [-h|--help]"
 }
 
 help() {
@@ -85,6 +107,7 @@ Options:
   -D, --domain               define Domain Name
   -l, --lan                  define LAN Interface (ej: eth0)
   --debug                    Enable debugging information
+  -r, --role                 role-based script for running in server after installation
   Help options:
       --help     give this help list
       --usage	 Display brief usage message
@@ -102,7 +125,7 @@ if [ $# = 0 ]; then
 fi
 
 # processing arguments
-ARGS=`getopt -n$0 -u -a -o r:n:D:l:h --longoptions packages:,debug,usage,verbose,version,help,lan::,domain::,hostname:: -- "$@"`
+ARGS=`getopt -n$0 -u -a -o r:n:D:l:h --longoptions packages:,debug,usage,verbose,version,help,lan::,role::,domain::,hostname:: -- "$@"`
 eval set -- "$ARGS"
 
 while [ $# -gt 0 ]; do
@@ -123,7 +146,12 @@ while [ $# -gt 0 ]; do
 			optarg_check $1 "$2"
             LAN_INTERFACE=$2
             shift
-            ;;            
+            ;;
+        -r|--role)
+			optarg_check $1 "$2"
+            ROLENAME=$2
+            shift
+            ;;                        
         --packages)
 			optarg_check $1 "$2"
 			PACKAGES="$2"
@@ -215,7 +243,16 @@ read -p "Continue with installation (y/n)?" WORK
 		exit 0
 	fi
 	
-	
+	# executing a role
+	if [ ! -z "$ROLENAME" ]; then
+		get_role
+		. $ROLE
+		# run
+		if [ "$?" -ne "0" ]; then
+			error "failed to execute role $ROLENAME"
+		fi
+	fi
+		
 	# installing a package list
 	if [ ! -z "$PACKAGES" ]; then
 		install_package $(echo $PACKAGES | tr ',' ' ')

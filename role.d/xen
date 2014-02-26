@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# install
+aptitude install xen-linux-system-amd64 xen-tools
+
+default_ram=2048
+
+# 
+sed -i -e "s/(dom0-min-mem .*)/(dom0-min-mem $default_ram)/" /etc/xen/xend-config.sxp
+sed -i -e 's/(enable-dom0-ballooning .*)/(enable-dom0-ballooning no)/' /etc/xen/xend-config.sxp
+
+# enable api (libvirt-related)
+sed -i -e 's/#(xend-http-server .*)/(xend-http-server yes)/' /etc/xen/xend-config.sxp
+sed -i -e 's/#(xend-tcp-xmlrpc-server .*)/(xend-tcp-xmlrpc-server yes)/' /etc/xen/xend-config.sxp
+sed -i -e 's/#(xend-unix-xmlrpc-server .*)/(xend-unix-xmlrpc-server yes)/' /etc/xen/xend-config.sxp
+
+# enable ports for xen
+
+
+# enable XL toolstack
+sed -i -e 's/TOOLSTACK=.*/TOOLSTACK=xl/' /etc/default/xen
+
+# disable Xen domain restore
+sed -i -e 's/XENDOMAINS_SAVE=.*/XENDOMAINS_SAVE=\"\"/' /etc/default/xendomains
+sed -i -e 's/XENDOMAINS_RESTORE=.*/XENDOMAINS_RESTORE=false/' /etc/default/xendomains
+
+aptitude install libvirt-bin
+
+adduser root libvirt
+
+aptitude purge qemu-kvm
+
+# update grub for booting into Xen
+dpkg-divert --divert /etc/grub.d/08_linux_xen --rename /etc/grub.d/20_linux_xen
+
+sed -e "/^GRUB_CMDLINE_LINUX=.*/ s/$/\nGRUB_CMDLINE_XEN=\"dom0_mem=$default_ramM\"\n/" /etc/default/grub
+
+update-grub
+
+info "instalacion de xen finalizada ..."
