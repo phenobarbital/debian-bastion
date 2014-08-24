@@ -23,25 +23,34 @@ Entre las acciones de seguridad que asume el script están:
 
 * Instalar en el equipo objetivo lsb-release y git-core
 
-    apt-get install lsb-release git-core libpcre3
+```bash
+apt-get install lsb-release git-core libpcre3
+```
 
 * Dirigirse a /srv (o a /opt)
 
-    cd /srv
+```bash
+cd /srv
+```
 
 * Descargar el script desde github
 
-    git clone
+```bash
+git clone
+```
 
 * Ejecutar:
 
-    cd debian-bastion
-    ./bastionado.sh --debug
+```bash
+cd debian-bastion
+./bastionado.sh --debug
+```
 
 * Siga las instrucciones:
 
-    defina nombre de host y nombre de dominio
-
+```bash
+defina nombre de host y nombre de dominio
+```
 
 ## Parametros adicionales
 
@@ -49,9 +58,11 @@ Entre las acciones de seguridad que asume el script están:
     --domain : permite indicar el dominio al que pertenece
     --debug : muestra mensajes informativos en pantalla
 
-Ejemplo:
+### Ejemplo:
 
-    ./bastionado.sh --debug --hostaname=web --domain=devel.local
+```bash
+./bastionado.sh --debug --hostaname=web --domain=devel.local
+```
 
 # Notas importantes:
 
@@ -68,7 +79,9 @@ Herramientas de seguridad:
 
 * Tripwire solicitará un passphrase:
 
-    Please enter your local passphrase:
+```bash
+Please enter your local passphrase:
+```
 
 Simplemente presione ENTER, posteriormente deberá colocar la contraseña de desbloqueo de acceso a la base de datos de integridad, almacenar luego en lugar seguro.
 
